@@ -4,28 +4,48 @@
 
 #define MAX_ARRAY 10
 
+struct Matrix {
+	int x;
+	int y;
+	int data[MAX_ARRAY][MAX_ARRAY];
+};
+
+void printArray(struct Matrix thisMatrix);
 
 int main() {
-	int number;
-	printf("Enter Number: ");
-	scanf("%i", &number);
-	printf("%i\n", number);
-	if(number > MAX_ARRAY) {
+	int x;
+	int y;
+
+	printf("Enter x y: ");
+	scanf("%i %i", &x, &y);
+	if(x > MAX_ARRAY || y > MAX_ARRAY) {
 		exit(-1);
 	}
 
-	int array[MAX_ARRAY] = {0};
+	struct Matrix temp;
+	temp.x = x;
+	temp.y = y;
 
-	printf("Type ya numbers(%i): ",number);
-	for (int i = 0; i < number; ++i) {
-		int input = 0;
-		scanf("%i", &input);
-		array[i] = input;
-		printf(" ");
+	printf("Type ya numbers(%i):\n",x);
+
+	for (int j = 0; j < y; ++j) {
+		for (int i = 0; i < x; ++i) {
+			int input = 0;
+			scanf("%i", &input);
+			temp.data[i][j] = input;
+		}
+		fflush(stdin);
 	}
+	printArray(temp);
+}
 
-	printf("Output: ");
-	for (int j = 0; j < 9; ++j) {
-		printf("%i ",array[j]);
+void printArray(struct Matrix thisMatrix) {
+//	printf("x: %i\n",thisMatrix.x);
+//	printf("y: %i\n",thisMatrix.y);
+	for (int j = 0; j < thisMatrix.y; ++j) {
+		for (int i = 0; i < thisMatrix.x; ++i) {
+				printf("%i ", thisMatrix.data[i][j]);
+		}
+		printf("\n");
 	}
 }

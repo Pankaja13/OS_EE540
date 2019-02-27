@@ -4,6 +4,7 @@
 #include <pthread.h>
 
 #define MAX_ARRAY 10
+#define PROMPT 0
 
 struct Indices {
 	int i; /* row */
@@ -24,7 +25,9 @@ struct Matrix getArrayFromInput(){
 	int x;
 	int y;
 
-	printf("Enter y x: ");
+	if (PROMPT){
+		printf("Enter y x: ");
+	}
 	scanf("%i %i", &y, &x);
 	if(x > MAX_ARRAY || y > MAX_ARRAY) {
 		exit(-1);
@@ -34,7 +37,9 @@ struct Matrix getArrayFromInput(){
 	temp.x = x;
 	temp.y = y;
 
-	printf("Type ya numbers(%i):\n",x);
+	if (PROMPT){
+		printf("Type ya numbers(%i):\n",x);
+	}
 
 	for (int j = 0; j < y; ++j) {
 		for (int i = 0; i < x; ++i) {
@@ -97,52 +102,40 @@ int main() {
 	A = getArrayFromInput();
 	B = getArrayFromInput();
 
-	printArray(A);
-	printArray(B);
+	if (PROMPT){
+		printArray(A);
+		printArray(B);
+	}
 
 	R.y = A.y;
 	R.x = B.x;
 
-	printf("---------------\n");
-
 	pthread_t thread_id[MAX_ARRAY*MAX_ARRAY];
 	int threadCount = 0;
 
-//	printf("Rx: %i R.y: %i)\n\n",R.x,R.y);
-
-	printf("%i == 11\n", getMatrixProduct(1,1));
-	printf("%i == 30\n", getMatrixProduct(2,2));
-
-	for (int j = 1; j < R.y+1; ++j) {
-		for (int i = 1; i < R.x+1; ++i) {
-//			printf("(%i,%i)\t",i,j);
-			printf("%i ", getMatrixProduct(j,i));
-//			multiplyThread(i,j);
-//			struct Indices *data = (struct Indices *)malloc(sizeof(struct Indices));
-//			data->i = i;
-//			data->j = j;
-//			pthread_create(&thread_id[threadCount], NULL, multiplyThread, (void *)data);
-//			threadCount++;
+	for (int i = 1; i < R.y+1; ++i) {
+		for (int j = 1; j < R.x+1; ++j) {
+			struct Indices *data = (struct Indices *)malloc(sizeof(struct Indices));
+			data->i = i;
+			data->j = j;
+			pthread_create(&thread_id[threadCount], NULL, multiplyThread, (void *)data);
+			threadCount++;
 		}
-		printf("\n");
 	}
 	for (int k = 0; k < threadCount; ++k) {
 		pthread_join( thread_id[k], NULL);
 	}
 
-	printf("---------------\n");
 	printArray(R);
-
-
 
 }
 
 void printArray(struct Matrix thisMatrix) {
-	printf("x: %i\n",thisMatrix.x);
-	printf("y: %i\n",thisMatrix.y);
+//	printf("x: %i\n",thisMatrix.x);
+//	printf("y: %i\n",thisMatrix.y);
 	for (int j = 0; j < thisMatrix.y; ++j) {
 		for (int i = 0; i < thisMatrix.x; ++i) {
-				printf("%i ", thisMatrix.data[i][j]);
+				printf("%i  ", thisMatrix.data[i][j]);
 		}
 		printf("\n");
 	}

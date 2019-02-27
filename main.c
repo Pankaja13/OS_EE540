@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
 
 #define MAX_ARRAY 10
 
@@ -79,6 +80,10 @@ int getMatrixProduct(int col, int row){
 	return sum;
 }
 
+void multiplyThread(int i, int j){
+	R.data[j-1][i-1] = getMatrixProduct(i,j);
+}
+
 int main() {
 	A = getArrayFromInput();
 	B = getArrayFromInput();
@@ -92,7 +97,7 @@ int main() {
 	for (int i = 1; i < A.x; ++i) {
 		for (int j = 1; j < B.y; ++j) {
 //			printf("%i ", getMatrixProduct(i,j));
-			R.data[j-1][i-1] = getMatrixProduct(i,j);
+			multiplyThread(i,j);
 		}
 	}
 

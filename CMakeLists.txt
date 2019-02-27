@@ -3,5 +3,5 @@ project(OS_EE540 C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(OS_EE540 main.c)
+add_executable(OS_EE540 ha2.c)
 

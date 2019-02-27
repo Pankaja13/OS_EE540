@@ -61,7 +61,6 @@ int getMatrixProduct(int col, int row){
 		rowValues[k] = val;
 	}
 
-	printf("\n");
 
 	int colValues[10] = {0};
 	for (int l = 0; l < B.y; ++l) {
@@ -74,9 +73,9 @@ int getMatrixProduct(int col, int row){
 	for (int i = 0; i < 10; ++i) {
 		sum = sum + (rowValues[i] * colValues[i]);
 	}
-	printf("SUM: %i\n", sum);
+//	printf("SUM: %i\n", sum);
 
-	return 1;
+	return sum;
 }
 
 int main() {
@@ -89,9 +88,10 @@ int main() {
 	printf("---------------\n");
 	for (int i = 1; i < A.x; ++i) {
 		for (int j = 1; j < B.y; ++j) {
-			getMatrixProduct(i,j);
+			printf("%i ", getMatrixProduct(i,j));
 //			printf("%i %i\n",i, j);
 		}
+		printf("\n");
 	}
 
 	printf("---------------\n");

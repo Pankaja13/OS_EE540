@@ -5,6 +5,10 @@
 
 #define MAX_ARRAY 10
 
+struct Indices {
+	int i; /* row */
+	int j; /* column */
+} ;
 struct Matrix {
 	int x;
 	int y;
@@ -20,8 +24,8 @@ struct Matrix getArrayFromInput(){
 	int x;
 	int y;
 
-	printf("Enter x y: ");
-	scanf("%i %i", &x, &y);
+	printf("Enter y x: ");
+	scanf("%i %i", &y, &x);
 	if(x > MAX_ARRAY || y > MAX_ARRAY) {
 		exit(-1);
 	}
@@ -45,8 +49,8 @@ struct Matrix getArrayFromInput(){
 
 int getMatrixProduct(int col, int row){
 //	printf("Output Array Size: %i\n", A.x*B.y);
-	if (A.y != B.x) {
-		printf("Size Mismatch: %i %i\n", A.y, B.x);
+	if (A.x != B.y) {
+		printf("Size Mismatch: %i %i\n", A.x, B.y);
 		return -1;
 	}
 //
@@ -80,8 +84,13 @@ int getMatrixProduct(int col, int row){
 	return sum;
 }
 
-void multiplyThread(int i, int j){
+void* multiplyThread(void* thing){
+
+	int j = ((struct Indices*)thing)->j;
+	int i = ((struct Indices*)thing)->i;
 	R.data[j-1][i-1] = getMatrixProduct(i,j);
+//	printf("%s\n","lol wut");
+	return NULL;
 }
 
 int main() {
@@ -91,26 +100,46 @@ int main() {
 	printArray(A);
 	printArray(B);
 
-	R.x = A.y;
-	R.y = B.x;
+	R.y = A.y;
+	R.x = B.x;
 
-	for (int i = 1; i < A.x; ++i) {
-		for (int j = 1; j < B.y; ++j) {
-//			printf("%i ", getMatrixProduct(i,j));
-			multiplyThread(i,j);
+	printf("---------------\n");
+
+	pthread_t thread_id[MAX_ARRAY*MAX_ARRAY];
+	int threadCount = 0;
+
+//	printf("Rx: %i R.y: %i)\n\n",R.x,R.y);
+
+	printf("%i == 11\n", getMatrixProduct(1,1));
+	printf("%i == 30\n", getMatrixProduct(2,2));
+
+	for (int j = 1; j < R.y+1; ++j) {
+		for (int i = 1; i < R.x+1; ++i) {
+//			printf("(%i,%i)\t",i,j);
+			printf("%i ", getMatrixProduct(j,i));
+//			multiplyThread(i,j);
+//			struct Indices *data = (struct Indices *)malloc(sizeof(struct Indices));
+//			data->i = i;
+//			data->j = j;
+//			pthread_create(&thread_id[threadCount], NULL, multiplyThread, (void *)data);
+//			threadCount++;
 		}
+		printf("\n");
+	}
+	for (int k = 0; k < threadCount; ++k) {
+		pthread_join( thread_id[k], NULL);
 	}
 
 	printf("---------------\n");
 	printArray(R);
-	printf("---------------\n");
+
 
 
 }
 
 void printArray(struct Matrix thisMatrix) {
-//	printf("x: %i\n",thisMatrix.x);
-//	printf("y: %i\n",thisMatrix.y);
+	printf("x: %i\n",thisMatrix.x);
+	printf("y: %i\n",thisMatrix.y);
 	for (int j = 0; j < thisMatrix.y; ++j) {
 		for (int i = 0; i < thisMatrix.x; ++i) {
 				printf("%i ", thisMatrix.data[i][j]);

@@ -11,6 +11,7 @@ struct Matrix {
 };
 struct Matrix A;
 struct Matrix B;
+struct Matrix R;
 
 void printArray(struct Matrix thisMatrix);
 
@@ -85,15 +86,18 @@ int main() {
 	printArray(A);
 	printArray(B);
 
-	printf("---------------\n");
+	R.x = A.y;
+	R.y = B.x;
+
 	for (int i = 1; i < A.x; ++i) {
 		for (int j = 1; j < B.y; ++j) {
-			printf("%i ", getMatrixProduct(i,j));
-//			printf("%i %i\n",i, j);
+//			printf("%i ", getMatrixProduct(i,j));
+			R.data[j-1][i-1] = getMatrixProduct(i,j);
 		}
-		printf("\n");
 	}
 
+	printf("---------------\n");
+	printArray(R);
 	printf("---------------\n");
 
 
